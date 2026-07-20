@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 import os
-import yfinance as yf
+import yfinance as yf import asyncio
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
@@ -18,6 +18,26 @@ async def price(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await update.message.reply_text(
         f"₿ قیمت فعلی بیت‌کوین:\n{current_price:.2f} دلار"
+        async def scan(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    coins = {
+        "BTC": "BTC-USD",
+        "ETH": "ETH-USD",
+        "SOL": "SOL-USD",
+        "BNB": "BNB-USD",
+        "XRP": "XRP-USD"
+    }
+
+    message = "🔍 اسکن بازار:\n\n"
+
+    for name, symbol in coins.items():
+        try:
+            data = yf.Ticker(symbol).history(period="1d")
+            price = data["Close"].iloc[-1]
+            message += f"{name}: {price:.2f} USD\n"
+        except:
+            message += f"{name}: خطا در دریافت قیمت\n"
+
+    await update.message.reply_text(message)
     )
 
 app = Application.builder().token(BOT_TOKEN).build()
@@ -26,4 +46,5 @@ app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("ping", ping))
 app.add_handler(CommandHandler("price", price))
 
+app.add_handler(CommandHandler("scan", scan))
 app.run_polling()
