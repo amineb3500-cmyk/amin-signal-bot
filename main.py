@@ -24,7 +24,23 @@ async def price(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+def calculate_rsi(data, period=14):
+    delta = data["Close"].diff()
+
+    gain = delta.where(delta > 0, 0)
+    loss = -delta.where(delta < 0, 0)
+
+    avg_gain = gain.rolling(period).mean()
+    avg_loss = loss.rolling(period).mean()
+
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+
+    return rsi.iloc[-1]
+
+
 async def scan(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     coins = {
         "BTC": "BTC-USD",
         "ETH": "ETH-USD",
@@ -36,12 +52,30 @@ async def scan(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = "🔍 اسکن بازار:\n\n"
 
     for name, symbol in coins.items():
+
         try:
-            data = yf.Ticker(symbol).history(period="1d")
+            data = yf.Ticker(symbol).history(period="1mo")
+
             price = data["Close"].iloc[-1]
-            message += f"{name}: {price:.2f} USD\n"
-        except:
-            message += f"{name}: خطا در دریافت قیمت\n"
+            rsi = calculate_rsi(data)
+
+            if rsi > 60:
+                status = "🟢 قدرت خریدار"
+            elif rsi < 40:
+                status = "🔴 ضعیف"
+            else:
+                status = "🟡 صبر"
+
+            message += (
+                f"{name}\n"
+                f"💰 قیمت: {price:.2f}\n"
+                f"📊 RSI: {rsi:.2f}\n"
+                f"وضعیت: {status}\n\n"
+            )
+
+        except Exception as e:
+            message += f"{name}: خطا\n"
+
 
     await update.message.reply_text(message)
 
