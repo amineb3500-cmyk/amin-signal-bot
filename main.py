@@ -55,6 +55,25 @@ app.add_handler(CommandHandler("scan", scan))
 
 async def signal(update: Update, context: 
 ContextTypes.DEFAULT_TYPE):
+    async def signal(update: Update, context: 
+ContextTypes.DEFAULT_TYPE):
+    btc = yf.Ticker("BTC-USD")
+    data = btc.history(period="2d")
+    price = data["Close"].iloc[-1]
+    old = data["Close"].iloc[-2]
+    
+    if price > old:
+        sig = "🟢 BUY"
+        
+    elif price < old:
+        sig = "🔴 SELL"
+        
+    else:
+        sig = "🟡 WAIT"
+        
+    text = f"₿ BTC: {price:.2f}$"   
+    
+    await update.message.reply_text(f"{text}\n 🎯سیگنال: {sig}")
     
     await update.message.reply_text("📡 سیگنال فعال شد!")
     
