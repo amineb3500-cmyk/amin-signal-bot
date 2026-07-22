@@ -53,4 +53,11 @@ app.add_handler(CommandHandler("ping", ping))
 app.add_handler(CommandHandler("price", price))
 app.add_handler(CommandHandler("scan", scan))
 
+async def signal(update: Update, context: 
+ContextTypes.DEFAULT_TYPE):
+    
+    await update.message.reply_text("📡 سیگنال فعال شد!")
+    
+app.add_handler(CommandHandler("signal", signal))
+
 app.run_polling()
