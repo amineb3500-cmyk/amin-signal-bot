@@ -16,7 +16,7 @@ async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def price(update: Update, context: ContextTypes.DEFAULT_TYPE):
     btc = yf.Ticker("BTC-USD")
-    data = btc.history(period="1d")
+    data = btc.history(period="3mo")
     current_price = data["Close"].iloc[-1]
 
     await update.message.reply_text(
