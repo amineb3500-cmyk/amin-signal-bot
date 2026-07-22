@@ -53,23 +53,44 @@ app.add_handler(CommandHandler("ping", ping))
 app.add_handler(CommandHandler("price", price))
 app.add_handler(CommandHandler("scan", scan))
 
+def calculate_rsi(series, period=14):
+    delta = series.diff()
+
+    gain = delta.where(delta > 0, 0)
+    loss = -delta.where(delta < 0, 0)
+
+    avg_gain = gain.rolling(period).mean()
+    avg_loss = loss.rolling(period).mean()
+
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+
+    return rsi
+    
 async def signal(update: Update, context: 
 ContextTypes.DEFAULT_TYPE):
     btc = yf.Ticker("BTC-USD")
     data = btc.history(period="2d")
     price = data["Close"].iloc[-1]
     old = data["Close"].iloc[-2]
+    rsi = calculate_rsi(data["Close"]).iloc[-1]
     
     if price > old:
         sig = "🟢 BUY"
         
+    elif rsi < 30:
+        sig = "🟢 BUY (RSI Oversold)"
+
+    elif rsi > 70:
+        sig = "🔴 SELL (RSI Overbought)"
+
     elif price < old:
         sig = "🔴 SELL"
-        
+
     else:
         sig = "🟡 WAIT"
         
-    text = f"₿ BTC: {price:.2f}$"
+    text = f"₿ BTC: {price:.2f}$\n📊 RSI: {rsi:.1f}"
     
     await update.message.reply_text(f"{text} | 🎯 {sig}")
     
