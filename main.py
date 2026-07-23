@@ -68,11 +68,11 @@ def calculate_rsi(series, period=14):
     return rsi
     
 async def signal(update: Update, context: ContextTypes.DEFAULT_TYPE):
-btc = yf.Ticker("BTC-USD")
-data = btc.history(period="3mo")
-price = data["Close"].iloc[-1]
-old = data["Close"].iloc[-2]
-rsi = calculate_rsi(data["Close"]).iloc[-1]
+    btc = yf.Ticker("BTC-USD")
+    data = btc.history(period="3mo")
+    price = data["Close"].iloc[-1]
+    old = data["Close"].iloc[-2]
+    rsi = calculate_rsi(data["Close"]).iloc[-1]
 
 if rsi < 30:
     sig = "🟢 BUY (RSI Oversold)"
