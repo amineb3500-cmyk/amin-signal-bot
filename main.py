@@ -67,21 +67,19 @@ def calculate_rsi(series, period=14):
 
     return rsi
     
-async def signal(update: Update, context: 
-ContextTypes.DEFAULT_TYPE):
-    btc = yf.Ticker("BTC-USD")
-    data = btc.history(period="3mo")
-    price = data["Close"].iloc[-1]
-    old = data["Close"].iloc[-2]
-    rsi = calculate_rsi(data["Close"]).iloc[-1]
-    
-    
-if rsi < 30: 
+async def signal(update: Update, context: ContextTypes.DEFAULT_TYPE):
+btc = yf.Ticker("BTC-USD")
+data = btc.history(period="3mo")
+price = data["Close"].iloc[-1]
+old = data["Close"].iloc[-2]
+rsi = calculate_rsi(data["Close"]).iloc[-1]
+
+if rsi < 30:
     sig = "🟢 BUY (RSI Oversold)"
-    
-elif rsi > 70: 
+
+elif rsi > 70:
     sig = "🔴 SELL (RSI Overbought)"
-    
+
 else:
     if price > old:
         sig = "🟢 BUY"
@@ -92,12 +90,11 @@ else:
     else:
         sig = "🟡 WAIT"
 
+text = f"₿ BTC: {price:.2f}$\n📊 RSI: {rsi:.1f}"
 
-    text = f"₿ BTC: {price:.2f}$\n📊 RSI: {rsi:.1f}"
-    
-    await update.message.reply_text(f"{text} | 🎯 {sig}")
-    
+await update.message.reply_text(f"{text} | 🎯 {sig}")
 app.add_handler(CommandHandler("signal", signal))
 
 app.run_polling()
+
 
