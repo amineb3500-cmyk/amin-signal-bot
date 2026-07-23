@@ -6,28 +6,28 @@ import yfinance as yf
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-await update.message.reply_text("🤖 ربات سیگنال امین فعال شد!")
+    await update.message.reply_text("🤖 ربات سیگنال امین فعال شد!")
 
 async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
-await update.message.reply_text("🏓 Pong! ربات آنلاین است.")
+    await update.message.reply_text("🏓 Pong! ربات آنلاین است.")
 
 async def price(update: Update, context: ContextTypes.DEFAULT_TYPE):
-btc = yf.Ticker("BTC-USD")
-data = btc.history(period="3mo")
-current_price = data["Close"].iloc[-1]
+    btc = yf.Ticker("BTC-USD")
+    data = btc.history(period="3mo")
+    current_price = data["Close"].iloc[-1]
 
-await update.message.reply_text(
-    f"₿ قیمت فعلی بیت‌کوین:\n{current_price:.2f} دلار"
+    await update.message.reply_text(
+        f"₿ قیمت فعلی بیت‌کوین:\n{current_price:.2f} دلار"
 )
 
 async def scan(update: Update, context: ContextTypes.DEFAULT_TYPE):
-coins = {
-"BTC": "BTC-USD",
-"ETH": "ETH-USD",
-"SOL": "SOL-USD",
-"BNB": "BNB-USD",
-"XRP": "XRP-USD"
-}
+    coins = {
+        "BTC": "BTC-USD",
+        "ETH": "ETH-USD",
+        "SOL": "SOL-USD",
+        "BNB": "BNB-USD",
+        "XRP": "XRP-USD"
+    }
 
 message = "🔍 اسکن بازار:\n\n"
 
@@ -39,29 +39,29 @@ for name, symbol in coins.items():
     except:
         message += f"{name}: خطا در دریافت قیمت\n"
 
-await update.message.reply_text(message)
+    await update.message.reply_text(message)
 
-def calculate_rsi(series, period=14):
-delta = series.diff()
+    def calculate_rsi(series, period=14):
+    delta = series.diff()
 
-gain = delta.where(delta > 0, 0)
-loss = -delta.where(delta < 0, 0)
+    gain = delta.where(delta > 0, 0)
+    loss = -delta.where(delta < 0, 0)
 
-avg_gain = gain.rolling(period).mean()
-avg_loss = loss.rolling(period).mean()
+    avg_gain = gain.rolling(period).mean()
+    avg_loss = loss.rolling(period).mean()
 
-rs = avg_gain / avg_loss
-rsi = 100 - (100 / (1 + rs))
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
 
-return rsi
+    return rsi
 
 async def signal(update: Update, context: ContextTypes.DEFAULT_TYPE):
-btc = yf.Ticker("BTC-USD")
-data = btc.history(period="3mo")
+    btc = yf.Ticker("BTC-USD")
+    data = btc.history(period="3mo")
 
-price = data["Close"].iloc[-1]
-old = data["Close"].iloc[-2]
-rsi = calculate_rsi(data["Close"]).iloc[-1]
+    price = data["Close"].iloc[-1]
+    old = data["Close"].iloc[-2]
+    rsi = calculate_rsi(data["Close"]).iloc[-1]
 
 if rsi < 30:
     sig = "🟢 BUY (RSI Oversold)"
