@@ -75,21 +75,24 @@ ContextTypes.DEFAULT_TYPE):
     old = data["Close"].iloc[-2]
     rsi = calculate_rsi(data["Close"]).iloc[-1]
     
-    if price > old:
-        sig = "🟢 BUY"
+    
+if rsi < 30: 
+    sig = "🟢 BUY (RSI Oversold)"
+    
+elif rsi > 70: 
+    sig = "🔴 SELL (RSI Overbought)"
+    
+else:
+    if price > old: 
+    sig = "🟢 BUY"
         
-    elif rsi < 30:
-        sig = "🟢 BUY (RSI Oversold)"
+elif price < old:
+    sig = "🔴 SELL"
 
-    elif rsi > 70:
-        sig = "🔴 SELL (RSI Overbought)"
+else:
+    sig = "🟡 WAIT"
 
-    elif price < old:
-        sig = "🔴 SELL"
 
-    else:
-        sig = "🟡 WAIT"
-        
     text = f"₿ BTC: {price:.2f}$\n📊 RSI: {rsi:.1f}"
     
     await update.message.reply_text(f"{text} | 🎯 {sig}")
