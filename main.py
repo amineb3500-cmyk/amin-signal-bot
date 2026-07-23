@@ -95,7 +95,7 @@ else:
 
 text = f"₿ BTC: {price:.2f}$\n📊 RSI: {rsi:.1f}"
     
-await update.message.reply_text(f"{text} | 🎯 {sig}")
+    await update.message.reply_text(f"{text} | 🎯 {sig}")
     
 app.add_handler(CommandHandler("signal", signal))
 
