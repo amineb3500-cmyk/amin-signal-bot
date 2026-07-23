@@ -74,14 +74,14 @@ async def signal(update: Update, context: ContextTypes.DEFAULT_TYPE):
     old = data["Close"].iloc[-2]
     rsi = calculate_rsi(data["Close"]).iloc[-1]
 
-if rsi < 30:
-    sig = "🟢 BUY (RSI Oversold)"
+    if rsi < 30:
+        sig = "🟢 BUY (RSI Oversold)"
 
-elif rsi > 70:
-    sig = "🔴 SELL (RSI Overbought)"
+    elif rsi > 70:
+        sig = "🔴 SELL (RSI Overbought)"
 
-else:
-    if price > old:
+    else:
+        if price > old:
         sig = "🟢 BUY"
 
     elif price < old:
