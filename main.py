@@ -82,13 +82,13 @@ async def signal(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     else:
         if price > old:
-        sig = "🟢 BUY"
+            sig = "🟢 BUY"
 
     elif price < old:
-        sig = "🔴 SELL"
+            sig = "🔴 SELL"
 
     else:
-        sig = "🟡 WAIT"
+            sig = "🟡 WAIT"
 
     text = f"₿ BTC: {price:.2f}$\n📊 RSI: {rsi:.1f}"
 
