@@ -70,7 +70,7 @@ def calculate_rsi(series, period=14):
 async def signal(update: Update, context: 
 ContextTypes.DEFAULT_TYPE):
     btc = yf.Ticker("BTC-USD")
-    data = btc.history(period="2d")
+    data = btc.history(period="3mo")
     price = data["Close"].iloc[-1]
     old = data["Close"].iloc[-2]
     rsi = calculate_rsi(data["Close"]).iloc[-1]
