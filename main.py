@@ -83,14 +83,14 @@ elif rsi > 70:
     sig = "🔴 SELL (RSI Overbought)"
     
 else:
-if price > old:
-    sig = "🟢 BUY"
+    if price > old:
+        sig = "🟢 BUY"
 
-elif price < old:
-    sig = "🔴 SELL"
+    elif price < old:
+        sig = "🔴 SELL"
 
-else:
-    sig = "🟡 WAIT"
+    else:
+        sig = "🟡 WAIT"
 
 
     text = f"₿ BTC: {price:.2f}$\n📊 RSI: {rsi:.1f}"
