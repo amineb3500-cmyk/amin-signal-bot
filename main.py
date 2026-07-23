@@ -83,9 +83,9 @@ elif rsi > 70:
     sig = "🔴 SELL (RSI Overbought)"
     
 else:
-    if price > old: 
-    sig = "🟢 BUY"
-        
+    if price > old:
+        sig = "🟢 BUY"
+
 elif price < old:
     sig = "🔴 SELL"
 
